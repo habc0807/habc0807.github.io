@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="说到富文本编辑器那可是一箩筐，数不胜数。国内比较知名的百度编辑器首当其冲。外国吗？Simditor很比错，功能精简、加载速度快速，但是没有react版的，要想使用就手动封装吧。对于react的富文本编辑器还没一个定论，我是说还没有一个纯react封装的富文本编辑器被大家广为使用，也许是坑太大了，没人能很好的填上。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在react项目中，富文本编辑器的使用">
+<meta property="og:url" content="http://yoursite.com/2017/02/05/%E5%9C%A8react%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%8C%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="说到富文本编辑器那可是一箩筐，数不胜数。国内比较知名的百度编辑器首当其冲。外国吗？Simditor很比错，功能精简、加载速度快速，但是没有react版的，要想使用就手动封装吧。对于react的富文本编辑器还没一个定论，我是说还没有一个纯react封装的富文本编辑器被大家广为使用，也许是坑太大了，没人能很好的填上。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/202755-2aebde24ccdbeacd.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-02-05T14:52:54.000Z">
+<meta property="article:modified_time" content="2020-06-29T10:21:04.382Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/202755-2aebde24ccdbeacd.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/05/在react项目中，富文本编辑器的使用/"/>
+
+
+
+
+
+  <title>在react项目中，富文本编辑器的使用 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/05/%E5%9C%A8react%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%8C%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">在react项目中，富文本编辑器的使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-05T22:52:54+08:00">
+                2017-02-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>说到富文本编辑器那可是一箩筐，数不胜数。国内比较知名的百度编辑器首当其冲。外国吗？Simditor很比错，功能精简、加载速度快速，但是没有react版的，要想使用就手动封装吧。对于react的富文本编辑器还没一个定论，我是说还没有一个纯react封装的富文本编辑器被大家广为使用，也许是坑太大了，没人能很好的填上。</p>
+<a id="more"></a>
+
+<h3 id="react-编辑器的选择"><a href="#react-编辑器的选择" class="headerlink" title="react 编辑器的选择"></a>react 编辑器的选择</h3><p>说到富文本编辑器那可是一箩筐，数不胜数。国内比较知名的百度编辑器首当其冲。外国吗？Simditor很比错，功能精简、加载速度快速，但是没有react版的，要想使用就手动封装吧。对于react的富文本编辑器还没一个定论，我是说还没有一个纯react封装的富文本编辑器被大家广为使用，也许是坑太大了，没人能很好的填上。</p>
+<p>也不是没有人填，facebook就出一款react富文本编辑器叫<strong><a href="https://github.com/facebook/draft-js" target="_blank" rel="noopener">draft-js</a></strong>，可以说它的界面精简至极，缺点是没有继承上传图片这等功能，对于这种要编辑长文的编辑器然要有解决办法，<strong><a href="http://bitwiser.in/medium-draft/" target="_blank" rel="noopener">medium-draft</a></strong>集成上传图片，添加了更加丰富的功能，不过它的设计和交互，在国内用户习惯和思维还没那么前卫的情况，尽量不要选用。或者你能力够强，去码源码。</p>
+<p>根据项目需求我们希望使用百度编辑器那样丰富的功能和简洁的设计，在github找到了<strong><a href="https://github.com/liuhong1happy/react-umeditor" target="_blank" rel="noopener">react-umeditor</a></strong>，这是<strong><a href="https://github.com/liuhong1happy/react-umeditor" target="_blank" rel="noopener">liuhong1happy</a></strong>同学将百度富文本编辑器用react封装的一个组件。查看了react-umeditor的demo，对该编辑器多方面评估，满足我们的项目需求，接下来就是在项目中尝试使用它了。</p>
+<h3 id="使用react-umeditor富文本编辑器"><a href="#使用react-umeditor富文本编辑器" class="headerlink" title="使用react-umeditor富文本编辑器"></a>使用react-umeditor富文本编辑器</h3><h6 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install react-umeditor --save</span><br></pre></td></tr></table></figure>
+
+<h6 id="Use"><a href="#Use" class="headerlink" title="Use"></a>Use</h6><p>javascript</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">import React from &#39;react&#39;</span><br><span class="line">import ReactDOM from &#39;react-dom&#39;</span><br><span class="line">import Editor from &#39;react-umeditor&#39;</span><br><span class="line"></span><br><span class="line">class App extends React.Component &#123;</span><br><span class="line">	constructor(props)&#123;</span><br><span class="line">		super(props);</span><br><span class="line">		this.state &#x3D; &#123;</span><br><span class="line">			content: &quot;&quot;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	handleChange(content)&#123;</span><br><span class="line">		this.setState(&#123;</span><br><span class="line">			content: content</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">	getIcons()&#123;</span><br><span class="line">		var icons &#x3D; [</span><br><span class="line">			&quot;source | undo redo | bold italic underline strikethrough fontborder emphasis | &quot;,</span><br><span class="line">			&quot;paragraph fontfamily fontsize | superscript subscript | &quot;,</span><br><span class="line">			&quot;forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | &quot;,</span><br><span class="line">			&quot;cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | &quot;,</span><br><span class="line">			&quot;horizontal date time  | image emotion spechars | inserttable&quot;</span><br><span class="line">		]</span><br><span class="line">		return icons;</span><br><span class="line">	&#125;</span><br><span class="line">	getQiniuUploader()&#123;</span><br><span class="line">		return &#123;</span><br><span class="line">			url:&#39;http:&#x2F;&#x2F;upload.qiniu.com&#39;,</span><br><span class="line">			type:&#39;qiniu&#39;,</span><br><span class="line">			name:&quot;file&quot;,</span><br><span class="line">			request: &quot;image_src&quot;,</span><br><span class="line">			qiniu:&#123;</span><br><span class="line">				app:&#123;</span><br><span class="line">					Bucket:&quot;liuhong1happy&quot;,</span><br><span class="line">					AK:&quot;l9vEBNTqrz7H03S-SC0qxNWmf0K8amqP6MeYHNni&quot;,</span><br><span class="line">					SK:&quot;eizTTxuA0Kq1YSe2SRdOexJ-tjwGpRnzztsSrLKj&quot;</span><br><span class="line">				&#125;,</span><br><span class="line">                domain:&quot;http:&#x2F;&#x2F;o9sa2vijj.bkt.clouddn.com&quot;,</span><br><span class="line">                genKey:function(options)&#123;</span><br><span class="line">                    return options.file.type +&quot;-&quot;+ options.file.size +&quot;-&quot;+ options.file.lastModifiedDate.valueOf() +&quot;-&quot;+ new Date().valueOf()+&quot;-&quot;+options.file.name;</span><br><span class="line">                &#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	render()&#123;</span><br><span class="line">		var icons &#x3D; this.getIcons();</span><br><span class="line">		var uploader &#x3D; this.getQiniuUploader();</span><br><span class="line">		var plugins &#x3D; &#123;</span><br><span class="line">			image:&#123;</span><br><span class="line">				uploader:uploader</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		var count &#x3D; 100;</span><br><span class="line">		var editors &#x3D; [];</span><br><span class="line">		for(var i&#x3D;0;i&lt;count;i++)&#123;</span><br><span class="line">			editors.push(&#123;</span><br><span class="line">				icons:icons,</span><br><span class="line">				plugins:plugins</span><br><span class="line">			&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">		return (&lt;Editor ref&#x3D;&quot;editor&quot;</span><br><span class="line">                                icons&#x3D;&#123;icons&#125;</span><br><span class="line">                                value&#x3D;&#123;this.state.content&#125;</span><br><span class="line">                                defaultValue&#x3D;&quot;&lt;p&gt;提示文本&lt;&#x2F;p&gt;&quot;</span><br><span class="line">                                onChange&#x3D;&#123;this.handleChange.bind(this)&#125;</span><br><span class="line">                                plugins&#x3D;&#123;plugins&#125; &#x2F;&gt;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh-CN"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"IE=edge"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Cache-Control"</span> <span class="attr">content</span>=<span class="string">"no-siteapp"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入富文本编辑器的样式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"../../dist/third-part/mathquill/mathquill.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"app.css"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入富文本编辑器的样式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入富文本编辑器的js --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../../dist/third-part/jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../../dist/third-part/mathquill/mathquill.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入富文本编辑器的js --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'assets/dist/js/lib.js'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'assets/dist/js/index.js'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>images(图标icons) </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">需要把images和third-part文件夹放到项目里</span><br></pre></td></tr></table></figure>
+<p>package.json(配置)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;copy&quot;: &quot;cp -R images&#x2F;. dist&#x2F;images &amp;&amp; cp -R less&#x2F;. dist&#x2F;less &amp;&amp; cp -R third-part&#x2F;. dist&#x2F;third-part&quot;,</span><br></pre></td></tr></table></figure>
+
+<h3 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h3><p><img src="http://upload-images.jianshu.io/upload_images/202755-2aebde24ccdbeacd.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="富文本编辑器.jpeg"></p>
+<p>###小结<br>期间对多个富文本编辑器在项目调试，最终选择了liuhong的react-umeditor，在组件使用过程中出现了很多问题。像图标引入不到项目里、需要修改配置等问题，最后都一一解决了。最后提示自己只看没用，一定要多实践，实践出真理，实践出真理，实践出真理，重要的事情说三遍。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/05/%E8%A7%A3%E5%86%B3react%E9%A1%B9%E7%9B%AE%E4%B8%ADPDF%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8E%E6%89%93%E5%8D%B0%E9%97%AE%E9%A2%98/" rel="next" title="解决react项目中PDF的显示与打印问题">
+                <i class="fa fa-chevron-left"></i> 解决react项目中PDF的显示与打印问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/09/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9A%84%E6%98%A5%E5%A4%A9/" rel="prev" title="响应式的春天">
+                响应式的春天 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#react-编辑器的选择"><span class="nav-number">1.</span> <span class="nav-text">react 编辑器的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用react-umeditor富文本编辑器"><span class="nav-number">2.</span> <span class="nav-text">使用react-umeditor富文本编辑器</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Install"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">Install</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Use"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">Use</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最终效果"><span class="nav-number">3.</span> <span class="nav-text">最终效果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

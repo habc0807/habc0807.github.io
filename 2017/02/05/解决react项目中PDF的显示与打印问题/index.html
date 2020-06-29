@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="拿到这个需求，真时一头雾水。因为没有做过类似需求，不知从何下手。在查阅资料的过程中，发现有很多jQuery插件可以实现显示pdf, 但是我们是react单页面应用项目，看来这些插件并不适用，只能另寻其它方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决react项目中PDF的显示与打印问题">
+<meta property="og:url" content="http://yoursite.com/2017/02/05/%E8%A7%A3%E5%86%B3react%E9%A1%B9%E7%9B%AE%E4%B8%ADPDF%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8E%E6%89%93%E5%8D%B0%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="拿到这个需求，真时一头雾水。因为没有做过类似需求，不知从何下手。在查阅资料的过程中，发现有很多jQuery插件可以实现显示pdf, 但是我们是react单页面应用项目，看来这些插件并不适用，只能另寻其它方法。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-02-05T14:52:54.000Z">
+<meta property="article:modified_time" content="2020-06-29T10:21:04.383Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/05/解决react项目中PDF的显示与打印问题/"/>
+
+
+
+
+
+  <title>解决react项目中PDF的显示与打印问题 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/05/%E8%A7%A3%E5%86%B3react%E9%A1%B9%E7%9B%AE%E4%B8%ADPDF%E7%9A%84%E6%98%BE%E7%A4%BA%E4%B8%8E%E6%89%93%E5%8D%B0%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">解决react项目中PDF的显示与打印问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-05T22:52:54+08:00">
+                2017-02-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>拿到这个需求，真时一头雾水。因为没有做过类似需求，不知从何下手。在查阅资料的过程中，发现有很多jQuery插件可以实现显示pdf, 但是我们是react单页面应用项目，看来这些插件并不适用，只能另寻其它方法。</p>
+<a id="more"></a>
+
+<p>最近项目中有这样一个需求：</p>
+<ol>
+<li>页面中可以显示pdf</li>
+<li>不希望把整个页面打印下来，只打印显示PDF的部分，可以使用浏览器自带打印功能</li>
+</ol>
+<hr>
+<h2 id="PDF文件的显示"><a href="#PDF文件的显示" class="headerlink" title="PDF文件的显示"></a>PDF文件的显示</h2><p>拿到这个需求，真时一头雾水。因为没有做过类似需求，不知从何下手。在查阅资料的过程中，发现有很多jQuery插件可以实现显示pdf, 但是我们是react单页面应用项目，看来这些插件并不适用，只能另寻其它方法。</p>
+<p>后来在 <a href="https://www.npmjs.com/" target="_blank" rel="noopener">npmjs.com</a> 上找到了 <a href="https://www.npmjs.com/package/react-pdf-js" target="_blank" rel="noopener">react-pdf-js</a> 组件, 心想显示pdf有望。就迫不及待将 react-pdf-js 依赖 通过 cnpm install react-pdf-js –save-dev 命令安装到项目中，通过 import PDF from ‘react-pdf-js’ 引入到项目里。将<PDF file={pdfUrl} onDocumentComplete={this.onDocumentComplete} onPageComplete={this.state.page} />插入render里。</p>
+<p>在调试过程中发现静态pdf文件可以显示，在线pdf文件不能显示。通过控制的报错信息了解道，react-pdf-js组件要求file文件地址是url或者base64格式, 既然url行不通，就只能往base64上靠了。</p>
+<h5 id="获取PDF文件"><a href="#获取PDF文件" class="headerlink" title="获取PDF文件"></a>获取PDF文件</h5><p>一开始我直接将将pdf的在线地址url转换为base64，但是不能显示。后来想明白了，只把url转换成base64格式是没有用的，需要把pdf的文件内容转换成base64才行。接下来就顺理成章，通过从后台获取到的pdf的url地址，再次请求获取到pdf文件。</p>
+<p>在做这部分的遇到一个小问题：能请求成功，就是获取不到pdf文件，在这纠结了很久，也不知道该如何解决，把问题描述给我们公司的架构师，我们分析这是跨域问题造成的，他给nginx服务器的配置解决了跨域问题。</p>
+<pre><code>&apos;Content-Type&apos;:  &apos;application/x-www-form-urlencoded;charset=utf-8&apos;,
+&apos;Access-Control-Allow-Origin&apos;: &apos;https://www.nurse-go.cn:9091&apos;,
+&apos;Access-Control-Allow-Methods&apos;: &apos;GET&apos;,
+&apos;Access-Control-Allow-Headers&apos;: &apos;X-Custom-Header&apos;,
+&apos;Access-Control-Allow-Credentials&apos;: true,</code></pre><h5 id="将PDF文件转换为base64格式"><a href="#将PDF文件转换为base64格式" class="headerlink" title="将PDF文件转换为base64格式"></a>将PDF文件转换为base64格式</h5><blockquote>
+<p>base64可以存储任何格式的文件，一种的很棒的存储方法。<a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL" target="_blank" rel="noopener">将文件转换为base64格式</a>。</p>
+</blockquote>
+<p>这里需要注意请求pdf文件的时候要设置<a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType" target="_blank" rel="noopener">responseType</a>为blob,  为什么使用blob类型下面解释，到这我就拿到了pdf文件，将其转化为base64格式。</p>
+<pre><code>let reader  = new FileReader()
+let fileParts = []
+fileParts.push(this.props.pdfFile)
+let blob = new Blob(fileParts, {type : &apos;application/pdf&apos;})
+if (blob) {
+    reader.readAsDataURL(blob)
+}
+let base64
+let that = this      // 处理this的指向  
+reader.addEventListener(&quot;load&quot;, function () {
+    base64 = reader.result
+   that.setState({
+          base64: base64,
+ })
+}, false);</code></pre><p>base64格式的转换，需要时blob格式，将转化为base64格式的pdf，在file={file}, 将其在浏览器上显示出来。实际上最终是以canvas来呈现的PDF。</p>
+<p>pdf显示算是告一段落，接下来就是打印了。</p>
+<hr>
+<h2 id="PDF文件的打印"><a href="#PDF文件的打印" class="headerlink" title="PDF文件的打印"></a>PDF文件的打印</h2><p>在浏览器上，打印分整页打印和指定部分打印。项目需要打印制定部分内容打印，实现打印的方法多种多样，我使用了传统的css控制。通过<a href="http://www.w3school.com.cn/tags/att_style_media.asp" target="_blank" rel="noopener">@media print</a>将打印时不需要打印的部分隐藏掉，那么剩下的就是要打印的部分了。</p>
+<h5 id="PDF文件打印调试"><a href="#PDF文件打印调试" class="headerlink" title="PDF文件打印调试"></a>PDF文件打印调试</h5><p>这里有个调试的小技巧：因为只有当调用了浏览器的打印才会调用@media print 里的样式，所以可以将这部分样式放在外面，当将不需要打印的部分都隐藏掉了，再将外部的这些样式去掉，给@media print即可。</p>
+<p>调用浏览器的打印使用的<a href="http://www.w3school.com.cn/jsref/met_win_print.asp" target="_blank" rel="noopener"> window.print()</a>， 虽然不能兼容所有浏览器，但是常见的高级浏览器都可以兼容，满足了我们的项目需求，这里我就没有继续深挖。</p>
+<p>pdf的显示与打印，前前后后遇到了不少问题，以上流水做个总结。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/05/%E5%9C%A8react%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%8C%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="prev" title="在react项目中，富文本编辑器的使用">
+                在react项目中，富文本编辑器的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PDF文件的显示"><span class="nav-number">1.</span> <span class="nav-text">PDF文件的显示</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#获取PDF文件"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">获取PDF文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#将PDF文件转换为base64格式"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">将PDF文件转换为base64格式</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PDF文件的打印"><span class="nav-number">2.</span> <span class="nav-text">PDF文件的打印</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#PDF文件打印调试"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">PDF文件打印调试</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

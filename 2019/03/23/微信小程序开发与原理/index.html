@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="小程序实战 今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。 我们先来看第一部分。 小程序说简单也简单，说难也难，对于这个框架简单，但是小程序的源码是闭源的。 小程序的诞生小程序并非凭空冒出来的一个概念。微信发布了一整套网页开发工具包，称之为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信小程序开发与原理">
+<meta property="og:url" content="http://yoursite.com/2019/03/23/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="小程序实战 今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。 我们先来看第一部分。 小程序说简单也简单，说难也难，对于这个框架简单，但是小程序的源码是闭源的。 小程序的诞生小程序并非凭空冒出来的一个概念。微信发布了一整套网页开发工具包，称之为">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-54481ef3a009f4f1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-bfdbe261849ce90a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-5a5f89ec52c192e9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-8be839b21840dd16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-012421324422ca56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-53bef5517dff7b6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-bfe48a240825e46e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-20e79e4551d4dc7d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2019-03-23T03:26:12.000Z">
+<meta property="article:modified_time" content="2020-06-29T10:23:56.106Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/202755-54481ef3a009f4f1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/23/微信小程序开发与原理/"/>
+
+
+
+
+
+  <title>微信小程序开发与原理 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/23/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微信小程序开发与原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-23T11:26:12+08:00">
+                2019-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="小程序实战"><a href="#小程序实战" class="headerlink" title="小程序实战"></a>小程序实战</h2><p><img src="https://upload-images.jianshu.io/upload_images/202755-54481ef3a009f4f1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="小程序流程.png"></p>
+<p>今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。</p>
+<p>我们先来看第一部分。</p>
+<p>小程序说简单也简单，说难也难，对于这个框架简单，但是小程序的源码是闭源的。</p>
+<h2 id="小程序的诞生"><a href="#小程序的诞生" class="headerlink" title="小程序的诞生"></a>小程序的诞生</h2><p>小程序并非凭空冒出来的一个概念。微信发布了一整套网页开发工具包，称之为 JS-SDK，开放了拍摄、录音、语音识别、二维码、地图、支付、分享、卡券等几十个API。让所有开发者都可以使用到微信的原生能力，去完成一些之前做不到或者难以做到的事情了。</p>
+<p>video 播放器 h5的解决方案比较弱 调二维码 h5地理定位。</p>
+<p>JS-SDK 解决了移动网页能力不足的问题，通过暴露微信的接口使得 Web 开发者能够拥有更多的能力，然而在更多的能力之外，JS-SDK 的模式并没有解决使用移动网页遇到的体验不良的问题。</p>
+<p>微信面临的问题：如何设计一个比较好的系统，使得所有开发者在微信中都能获得比较好的体验。这个问题是之前的 JS-SDK 所处理不了的，需要一个全新的系统来完成，它需要使得所有的开发者都能做到：</p>
+<p>小程序的本质是hbrid的开发</p>
+<ol>
+<li>丰富的客户端能力  api 组件多</li>
+<li>优良的离线性 </li>
+</ol>
+<ul>
+<li><p>快速的加载</p>
+</li>
+<li><p>更强大的能力</p>
+</li>
+<li><p>原生的体验</p>
+</li>
+<li><p>易用且安全的微信数据开放</p>
+</li>
+<li><p>高效和简单的开发</p>
+</li>
+</ul>
+<p>这就是小程序的由来。</p>
+<h2 id="小程序与普通网页开发的区别"><a href="#小程序与普通网页开发的区别" class="headerlink" title="小程序与普通网页开发的区别"></a>小程序与普通网页开发的区别</h2><p>​ 小程序的主要开发语言是 JavaScript ，所以通常小程序的开发会被用来同普通的网页开发来做对比。两者有很大的相似性，对于前端开发者而言，从网页开发迁移到小程序的开发成本并不高，但是二者还是有些许区别的。</p>
+<p>​ 网页开发渲染线程和脚本线程是互斥的，这也是为什么长时间的脚本运行可能会导致页面失去响应，而在小程序中，二者是分开的，分别运行在不同的线程中。网页开发者可以使用到各种浏览器暴露出来的 DOM API，进行 DOM 选中和操作。而如上文所述，小程序的逻辑层和渲染层是分开的，逻辑层运行在 JSCore 中，并没有一个完整浏览器对象，因而缺少相关的DOM API和BOM API。这一区别导致了前端开发非常熟悉的一些库，例如 jQuery、 Zepto 等，在小程序中是无法运行的。同时 JSCore 的环境同 NodeJS 环境也是不尽相同，所以一些 NPM 的包在小程序中也是无法运行的。</p>
+<p>​ 网页开发者需要面对的环境是各式各样的浏览器，PC 端需要面对 IE、Chrome、QQ浏览器等，在移动端需要面对Safari、Chrome以及 iOS、Android 系统中的各式 WebView 。而小程序开发过程中需要面对的是两大操作系统 iOS 和 Android 的微信客户端，以及用于辅助开发的小程序开发者工具，小程序中三大运行环境也是有所区别的，</p>
+<h2 id="小程序的更新机制"><a href="#小程序的更新机制" class="headerlink" title="小程序的更新机制"></a>小程序的更新机制</h2><p>手机得存储卡里 微信会下载很多小程序 小程序都是异步的没有同步概念这个概念<br>没更新就不更新 更新就返回新包 在微信后台悄悄下载 下一次打开才会生效</p>
+<p> 旧的小程序 然后微信后台进行校验 请求校验 有没有更新版本 有的话就给你下载到后台 下次打开就新的 </p>
+<p> <img src="https://upload-images.jianshu.io/upload_images/202755-bfdbe261849ce90a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="小程序包的管理机制.jpg"></p>
+<p> <img src="https://upload-images.jianshu.io/upload_images/202755-5a5f89ec52c192e9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="包更新.png"></p>
+<h2 id="小程序的运行中"><a href="#小程序的运行中" class="headerlink" title="小程序的运行中"></a>小程序的运行中</h2><h3 id="渲染层和逻辑层"><a href="#渲染层和逻辑层" class="headerlink" title="渲染层和逻辑层"></a>渲染层和逻辑层</h3><p>小程序的运行环境分成渲染层和逻辑层， WXML 模板和 WXSS 样式工作在渲染层，JS 脚本工作在逻辑层。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/202755-8be839b21840dd16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="渲染层逻辑层.png"></p>
+<h3 id="小程序的数据驱动基本原理"><a href="#小程序的数据驱动基本原理" class="headerlink" title="小程序的数据驱动基本原理"></a>小程序的数据驱动基本原理</h3><p>WXML结构实际上等价于一棵Dom树，通过一个JS对象也可以来表达Dom树的结构。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/202755-012421324422ca56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="逻辑层传递数据到渲染层.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/202755-53bef5517dff7b6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据驱动.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/202755-bfe48a240825e46e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="逻辑层传递数据到渲染层.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/202755-20e79e4551d4dc7d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片上传"></p>
+<h2 id="小程序运行机制"><a href="#小程序运行机制" class="headerlink" title="小程序运行机制"></a>小程序运行机制</h2><h3 id="前后台状态"><a href="#前后台状态" class="headerlink" title="前后台状态"></a>前后台状态</h3><p>小程序启动后，界面被展示给用户，此时小程序处于前台状态。</p>
+<p>当用户点击右上角按钮关闭小程序，或者按了设备home 键离开小程序，小程序并没有完全终止运行，而是进入了后台状态，小程序还可以运行一小段时间。</p>
+<p>当用户再次进入微信或再次打开小城，小程序又会从后台进入前台。但如果用户很久没有进入小程序，或者系统资源紧张，小程序可能被销毁，既完全终止运行。</p>
+<h3 id="小程序启动"><a href="#小程序启动" class="headerlink" title="小程序启动"></a>小程序启动</h3><p>这样，小程序启动可以分为两种情况，一种是冷启动，一种是热启动。</p>
+<p><strong>冷启动：</strong></p>
+<p>如果用户首次打开，或小程序销毁后被用户再次打开，此时小程序需要重新加载启动，既冷启动。</p>
+<p><strong>热启动：</strong></p>
+<p>如果用户已经打开过某小程序，然后在一定时间内再次打开该小程序，此时小程序并未被销毁，只是从后台状态进入前台，这个过程就是热启动。</p>
+<p><strong>小程序销毁时机：</strong></p>
+<p>通常，只有当小程序进入后台一定时间，或者系统资源占用过高，才会被销毁。具体而言包括以下几种情形。</p>
+<p>当小程序进入后台，可以会位置一小段时间的运行状态，如果这段时间内都微进入前台，消息恒旭会被销毁。当小程序占用系统资源过高，可能会被系统销毁或被微信客户端主动回收。</p>
+<ul>
+<li>在ios上，当微信客户端在一定时间间隔内（目前是5s） 连续收到两次及以上系统内存告警时，会主动进行小程序的销毁，并提示用户【该小程序可能导致微信响应变慢被终止】。</li>
+<li>建议小城在必要时使用 <code>wx.onMemoryWarning</code> 监听内存告警事件，进行必要的内存清理。</li>
+</ul>
+<p><strong>退出状态：</strong></p>
+<p>每当小程序可能被销毁之前，页面回调函数 <code>onSaveExitState</code> 会被调用。如果想保留页面中的状态，可以再这个回调函数中“保存”一些数据，下次启动时可以通过 <code>exitState</code> 获得这些已保存数据。</p>
+<h3 id="小程序的开发"><a href="#小程序的开发" class="headerlink" title="小程序的开发"></a>小程序的开发</h3><p>在 Javascript 的基础上，我们增加了一些功能，以方便小程序的开发：</p>
+<ul>
+<li>增加 App 和 Page 构造器，进行小程序的注册和页面的注册。</li>
+<li>增加 getApp 和 getCurrentPages 方法，分别用来获取 App 实例和当前页面栈。</li>
+<li>提供丰富的API，如扫一扫、支付等微信特有能力。</li>
+<li>提供模块化能力，每个页面有独立的作用域。</li>
+</ul>
+<blockquote>
+<p> 小程序框架的逻辑层并非运行在浏览器中，隐私 Javascript 在 web 中一些能力都无法使用，window, document，dom操作等。</p>
+</blockquote>
+<ul>
+<li>app 小程序构造器</li>
+<li>page 页面构造器</li>
+<li>响应式数据绑定</li>
+<li>组件</li>
+<li>api</li>
+<li>自定义组件</li>
+</ul>
+<h2 id="小程序配置"><a href="#小程序配置" class="headerlink" title="小程序配置"></a>小程序配置</h2><h3 id="JSON-语法"><a href="#JSON-语法" class="headerlink" title="JSON 语法"></a>JSON 语法</h3><p>看起来同 JavaScript 的对象表达方式十分相似，但是有所不同。</p>
+<p>JSON的Key必须包裹在一个双引号中，在实践中，编写 JSON 的时候，忘了给 Key 值加双引号或者是把双引号写成单引号是常见错误。</p>
+<h3 id="app-json-配置"><a href="#app-json-配置" class="headerlink" title="app.json 配置"></a>app.json 配置</h3><p>app.json 是当前小程序的全局配置，包括了小程序所有页面、界面表现、底部tab等。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"pages"</span>:[</span><br><span class="line">    <span class="string">"pages/index/index"</span>,</span><br><span class="line">    <span class="string">"pages/logs/logs"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"window"</span>:&#123;</span><br><span class="line">    <span class="attr">"backgroundTextStyle"</span>:<span class="string">"light"</span>,</span><br><span class="line">    <span class="attr">"navigationBarBackgroundColor"</span>: <span class="string">"#fff"</span>,</span><br><span class="line">    <span class="attr">"navigationBarTitleText"</span>: <span class="string">"WeChat"</span>,</span><br><span class="line">    <span class="attr">"navigationBarTextStyle"</span>:<span class="string">"black"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="页面配置"><a href="#页面配置" class="headerlink" title="页面配置"></a>页面配置</h3><p>每个小程序页面也可以使用同名的.json 文件来对本页面的窗口表现进行配置，页面中的配置项会覆盖app.json 的 window 中相同的配置项。</p>
+<blockquote>
+<p>相同的配置项，页面的配置项优先级高于 app.json</p>
+</blockquote>
+<p>小程序开发及其原理<br>志愿者小程序业务功能介绍  招募小程序重构者 1个人或者2个人<br>前期阶段 需要先梳理业务和代码逻辑 熟悉了这些方便后期的维护和重构。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/09/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9A%84%E6%98%A5%E5%A4%A9/" rel="next" title="响应式的春天">
+                <i class="fa fa-chevron-left"></i> 响应式的春天
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/29/v9%E6%94%AF%E4%BB%98%E5%89%8D%E7%AB%AF%E6%96%87%E6%A1%A3/" rel="prev" title="v9支付前端文档">
+                v9支付前端文档 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序实战"><span class="nav-number">1.</span> <span class="nav-text">小程序实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序的诞生"><span class="nav-number">2.</span> <span class="nav-text">小程序的诞生</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序与普通网页开发的区别"><span class="nav-number">3.</span> <span class="nav-text">小程序与普通网页开发的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序的更新机制"><span class="nav-number">4.</span> <span class="nav-text">小程序的更新机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序的运行中"><span class="nav-number">5.</span> <span class="nav-text">小程序的运行中</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#渲染层和逻辑层"><span class="nav-number">5.1.</span> <span class="nav-text">渲染层和逻辑层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序的数据驱动基本原理"><span class="nav-number">5.2.</span> <span class="nav-text">小程序的数据驱动基本原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序运行机制"><span class="nav-number">6.</span> <span class="nav-text">小程序运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前后台状态"><span class="nav-number">6.1.</span> <span class="nav-text">前后台状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序启动"><span class="nav-number">6.2.</span> <span class="nav-text">小程序启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序的开发"><span class="nav-number">6.3.</span> <span class="nav-text">小程序的开发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序配置"><span class="nav-number">7.</span> <span class="nav-text">小程序配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON-语法"><span class="nav-number">7.1.</span> <span class="nav-text">JSON 语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-json-配置"><span class="nav-number">7.2.</span> <span class="nav-text">app.json 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面配置"><span class="nav-number">7.3.</span> <span class="nav-text">页面配置</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
