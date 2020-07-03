@@ -94,12 +94,12 @@
 
 
 
-<meta name="description" content="小程序实战 今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。 我们先来看第一部分。 小程序说简单也简单，说难也难，对于这个框架简单，但是小程序的源码是闭源的。 小程序的诞生小程序并非凭空冒出来的一个概念。微信发布了一整套网页开发工具包，称之为">
+<meta name="description" content="今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微信小程序开发与原理">
 <meta property="og:url" content="http://yoursite.com/2019/03/23/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="小程序实战 今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。 我们先来看第一部分。 小程序说简单也简单，说难也难，对于这个框架简单，但是小程序的源码是闭源的。 小程序的诞生小程序并非凭空冒出来的一个概念。微信发布了一整套网页开发工具包，称之为">
+<meta property="og:description" content="今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-54481ef3a009f4f1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-bfdbe261849ce90a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-bfe48a240825e46e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/202755-20e79e4551d4dc7d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="article:published_time" content="2019-03-23T03:26:12.000Z">
-<meta property="article:modified_time" content="2020-06-29T10:23:56.106Z">
+<meta property="article:modified_time" content="2020-07-03T10:47:32.660Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/202755-54481ef3a009f4f1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
@@ -338,7 +338,10 @@
       
 
       
-        <h2 id="小程序实战"><a href="#小程序实战" class="headerlink" title="小程序实战"></a>小程序实战</h2><p><img src="https://upload-images.jianshu.io/upload_images/202755-54481ef3a009f4f1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="小程序流程.png"></p>
+        <p>今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。</p>
+<a id="more"></a>
+
+<h2 id="小程序实战"><a href="#小程序实战" class="headerlink" title="小程序实战"></a>小程序实战</h2><p><img src="https://upload-images.jianshu.io/upload_images/202755-54481ef3a009f4f1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="小程序流程.png"></p>
 <p>今天做微信小程序的分享，主要分为两部分，第一部分将小程序的更新机制、双线程和运行机制。第二部分讲志愿者小程序的项目架构和业务梳理以及目前存在的问题和优化方案。这次的分享前半部分偏理论，后半部分偏实战和业务。</p>
 <p>我们先来看第一部分。</p>
 <p>小程序说简单也简单，说难也难，对于这个框架简单，但是小程序的源码是闭源的。</p>
